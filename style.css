@@ -1,0 +1,215 @@
+display:flex;
+flex-direction:column;
+gap:10px;
+
+}
+
+.history-item{
+
+display:flex;
+align-items:center;
+
+gap:12px;
+
+padding:14px;
+
+border-radius:12px;
+
+background:white;
+
+box-shadow:var(--shadow);
+
+}
+
+.history-icon{
+
+width:40px;
+height:40px;
+
+border-radius:10px;
+
+background:#e9f2ff;
+
+}
+
+.history-content{
+
+flex:1;
+
+}
+
+.history-title{
+
+font-size:14px;
+font-weight:600;
+
+}
+
+.history-time{
+
+font-size:12px;
+color:var(--muted);
+
+}
+
+/* ================= BOTTOM NAV ================= */
+
+.bottom-nav{
+
+position:sticky;
+
+bottom:0;
+
+background:white;
+
+border-top:1px solid var(--border);
+
+display:flex;
+justify-content:space-around;
+
+padding:10px 0;
+
+margin-top:auto;
+
+}
+
+.nav-item{
+
+display:flex;
+flex-direction:column;
+
+align-items:center;
+
+gap:6px;
+
+font-size:12px;
+
+color:var(--muted);
+
+}
+
+.nav-item.active{
+
+color:var(--primary);
+
+}
+
+.nav-icon{
+
+width:26px;
+height:26px;
+
+border-radius:6px;
+
+background:#f0f2f5;
+
+}
+
+/* ================= NAV ICONS ================= */
+
+.nav-icon{
+width:26px;
+height:26px;
+position:relative;
+}
+
+/* Scan Icon */
+
+.nav-item:nth-child(1) .nav-icon{
+border:2px solid #0A66C2;
+border-radius:6px;
+}
+
+.nav-item:nth-child(1) .nav-icon::after{
+content:"";
+position:absolute;
+width:8px;
+height:8px;
+border-radius:50%;
+background:#0A66C2;
+top:7px;
+left:7px;
+}
+
+/* History Icon */
+
+.nav-item:nth-child(2) .nav-icon{
+border:2px solid #6e6e73;
+border-radius:50%;
+}
+
+.nav-item:nth-child(2) .nav-icon::after{
+content:"";
+position:absolute;
+width:2px;
+height:8px;
+background:#6e6e73;
+top:4px;
+left:11px;
+}
+
+.nav-item:nth-child(2) .nav-icon::before{
+content:"";
+position:absolute;
+width:6px;
+height:2px;
+background:#6e6e73;
+top:11px;
+left:11px;
+}
+
+/* Settings Icon */
+
+.nav-item:nth-child(3) .nav-icon{
+border:2px solid #6e6e73;
+border-radius:50%;
+}
+
+.nav-item:nth-child(3) .nav-icon::before{
+content:"";
+position:absolute;
+width:14px;
+height:2px;
+background:#6e6e73;
+top:11px;
+left:5px;
+}
+
+.nav-item:nth-child(3) .nav-icon::after{
+content:"";
+position:absolute;
+width:2px;
+height:14px;
+background:#6e6e73;
+top:5px;
+left:11px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:420px){
+
+.scan-frame{
+
+width:200px;
+height:200px;
+
+}
+
+@keyframes scanMove{
+
+0%{
+top:0;
+}
+
+50%{
+top:180px;
+}
+
+100%{
+top:0;
+}
+
+}
+
+}
