@@ -1,0 +1,606 @@
+/* =====================================================
+ERIS SCAN – PREMIUM UI (FULL MERGED)
+CAMERA + SCANNER FRAME + BASE LAYOUT
+RESULT CARD + BUTTONS + HISTORY
+FLOATING NAVBAR + ICON SYSTEM
+===================================================== */
+
+/* ================= ROOT ================= */
+
+:root {
+    --blue: #0A66C2; 
+    --blueLight: #1f7ae0;
+    --dark: #000; 
+    --white: #ffffff;
+    --radius: 20px;
+}
+
+/* ================= RESET ================= */
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: Inter, system-ui, -apple-system; 
+}
+
+body {
+    background: #000; 
+    color: #fff;
+    min-height: 100vh;
+    overflow-y: auto;
+}
+
+/* ================= APP ================= */
+
+.app {
+    width: 100%; 
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ================= HEADER ================= */
+
+.header {
+    position: absolute;
+    top: 24px; 
+    left: 22px;
+    z-index: 20;
+}
+
+.brand h1 {
+    font-size: 22px; 
+    font-weight: 700;
+}
+
+.brand p {
+    font-size: 13px; 
+    opacity: .6; 
+    margin-top: 4px;
+}
+
+/* ================= CAMERA ================= */
+
+.camera-section {
+    position: absolute;
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%;
+}
+
+#reader {
+    width: 100%; 
+    height: 100%;
+}
+
+#reader video {
+    width: 100%; 
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+/* ================= SCAN UI ================= */
+
+.scan-ui {
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+/* ================= SCAN BOX ================= */
+
+.scan-box {
+    width: 240px; 
+    height: 240px;
+    position: relative;
+}
+
+/* ================= CORNERS ================= */
+
+.corner {
+    position: absolute;
+    width: 42px; 
+    height: 42px;
+    border: 4px solid rgba(255,255,255,0.95);
+}
+
+.tl {
+    top: 0; 
+    left: 0;
+    border-right: none; 
+    border-bottom: none;
+}
+
+.tr {
+    top: 0; 
+    right: 0;
+    border-left: none; 
+    border-bottom: none;
+}
+
+.bl {
+    bottom: 0; 
+    left: 0;
+    border-right: none; 
+    border-top: none;
+}
+
+.br {
+    bottom: 0; 
+    right: 0;
+    border-left: none; 
+    border-top: none;
+}
+
+/* ================= SCAN LINE ================= */
+
+.scan-line {
+    position: absolute;
+    left: 0; 
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #00c6ff, #0A66C2);
+    border-radius: 4px;
+    animation: scanMove 2s linear infinite;
+}
+
+@keyframes scanMove {
+    0% { top: 0; }
+    50% { top: 220px; }
+    100% { top: 0; }
+}
+
+/* ================= SCAN GLOW ================= */
+
+.scan-box::after {
+    content: "";
+    position: absolute;
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(10,102,194,.3), inset 0 0 20px rgba(10,102,194,.15);
+}
+
+/* ================= CAMERA OVERLAY ================= */
+
+.camera-section::after {
+    content: "";
+    position: absolute;
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,.5), transparent 30%, transparent 70%, rgba(0,0,0,.5));
+    pointer-events: none;
+}
+
+/* ================= RESULT CARD ================= */
+
+.result-floating {
+    display: none;
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 110px;
+    background: #ffffff;
+    color: #111;
+    border-radius: 24px;
+    padding: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.45);
+    z-index: 30;
+    animation: resultSlide .35s ease;
+}
+
+/* ================= RESULT TEXT ================= */
+
+.result-text {
+    font-size: 15px;
+    font-weight: 500;
+    word-break: break-all;
+    margin-bottom: 16px;
+    color: #222;
+    line-height: 1.4;
+}
+
+/* ================= RESULT BUTTONS ================= */
+
+.result-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+/* ================= PRIMARY BUTTON ================= */
+
+.btn-primary {
+    flex: 1;
+    height: 46px;
+    border: none;
+    border-radius: 14px;
+    background: #0A66C2;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(10,102,194,.35);
+    transition: .2s;
+}
+
+.btn-primary:hover {
+    background: #0d73d8;
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    transform: scale(.96);
+}
+
+/* ================= OUTLINE BUTTON ================= */
+
+.btn-outline {
+    flex: 1;
+    height: 46px;
+    border-radius: 14px;
+    border: 2px solid #0A66C2;
+    background: #fff;
+    color: #0A66C2;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.btn-outline:hover {
+    background: #0A66C2;
+    color: #fff;
+}
+
+.btn-outline:active {
+    transform: scale(.96);
+}
+
+/* ================= RESULT ANIMATION ================= */
+
+@keyframes resultSlide {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= HISTORY SECTION ================= */
+
+.history-section {
+    display: none;
+    position: absolute;
+    top: 100px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    padding: 22px;
+    background: #000;
+}
+
+/* ================= HISTORY HEADER ================= */
+
+.history-section h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #fff;
+}
+
+/* ================= HISTORY ITEM ================= */
+
+.history-item {
+    background: #ffffff;
+    color: #111;
+    padding: 18px;
+    border-radius: 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.25);
+    cursor: pointer;
+    transition: .15s;
+}
+
+.history-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 35px rgba(0,0,0,.3);
+}
+
+.history-item p {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    word-break: break-all;
+}
+
+.history-item small {
+    font-size: 12px;
+    color: #777;
+}
+
+/* ================= CLEAR BUTTON ================= */
+
+.clear-btn {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background: #0A66C2;
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+/* ================= SCROLLBAR ================= */
+
+.history-section::-webkit-scrollbar {
+    width: 6px;
+}
+
+.history-section::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+
+/* ================= NAVBAR ================= */
+
+.bottom-nav {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    height: 64px;
+    background: rgba(255,255,255,.96);
+    border-radius: 32px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 12px 40px rgba(0,0,0,.25);
+    backdrop-filter: blur(14px);
+    z-index: 40;
+    padding: 4px;
+}
+
+/* ================= NAV ITEM ================= */
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #888;
+    font-weight: 500;
+    cursor: pointer;
+    transition: .2s;
+    width: 60px;
+    height: 54px;
+    border-radius: 14px;
+    justify-content: center;
+}
+
+.nav-item:active {
+    transform: scale(.92);
+}
+
+.nav-item.active {
+    color: #0A66C2;
+    background: rgba(10,102,194,.08);
+}
+
+/* ================= ICON BASE ================= */
+
+.nav-icon {
+    width: 24px;
+    height: 24px;
+    position: relative;
+}
+
+/* ================= SCAN ICON ================= */
+
+.nav-item:nth-child(1) .nav-icon {
+    border: 2px solid #0A66C2;
+    border-radius: 6px;
+}
+
+.nav-item:nth-child(1) .nav-icon::after {
+    content: "";
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: #0A66C2;
+    border-radius: 50%;
+    top: 6px;
+    left: 6px;
+}
+
+/* ================= FLASH ICON ================= */
+
+.nav-item:nth-child(2) .nav-icon {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 18px solid #888;
+}
+
+.nav-item:nth-child(2).active .nav-icon {
+    border-bottom-color: #0A66C2;
+}
+
+/* ================= IMAGE ICON ================= */
+
+.nav-item:nth-child(3) .nav-icon {
+    border: 2px solid #888;
+    border-radius: 5px;
+}
+
+.nav-item:nth-child(3) .nav-icon::before {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: #888;
+    border-radius: 50%;
+    top: 4px;
+    left: 4px;
+}
+
+.nav-item:nth-child(3) .nav-icon::after {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 2px;
+    background: #888;
+    bottom: 6px;
+    left: 5px;
+    transform: rotate(-30deg);
+}
+
+.nav-item:nth-child(3).active .nav-icon {
+    border-color: #0A66C2;
+}
+
+.nav-item:nth-child(3).active .nav-icon::before,
+.nav-item:nth-child(3).active .nav-icon::after {
+    background: #0A66C2;
+}
+
+/* ================= HISTORY ICON ================= */
+
+.nav-item:nth-child(4) .nav-icon {
+    border: 2px solid #888;
+    border-radius: 50%;
+}
+
+.nav-item:nth-child(4) .nav-icon::before {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 7px;
+    background: #888;
+    top: 4px;
+    left: 11px;
+}
+
+.nav-item:nth-child(4) .nav-icon::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 2px;
+    background: #888;
+    top: 10px;
+    left: 11px;
+}
+
+.nav-item:nth-child(4).active .nav-icon {
+    border-color: #0A66C2;
+}
+
+.nav-item:nth-child(4).active .nav-icon::before,
+.nav-item:nth-child(4).active .nav-icon::after {
+    background: #0A66C2;
+}
+
+/* ================= SETTINGS ICON ================= */
+
+.nav-item:nth-child(5) .nav-icon {
+    border: 2px solid #888;
+    border-radius: 50%;
+}
+
+.nav-item:nth-child(5) .nav-icon::before {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 2px;
+    background: #888;
+    top: 10px;
+    left: 6px;
+}
+
+.nav-item:nth-child(5) .nav-icon::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 10px;
+    background: #888;
+    top: 6px;
+    left: 10px;
+}
+
+.nav-item:nth-child(5).active .nav-icon {
+    border-color: #0A66C2;
+}
+
+.nav-item:nth-child(5).active .nav-icon::before,
+.nav-item:nth-child(5).active .nav-icon::after {
+    background: #0A66C2;
+}
+
+/* ================= NAV LABEL ================= */
+
+.nav-item p {
+    font-size: 10px;
+    letter-spacing: .2px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:420px) {
+    .scan-box { 
+        width: 200px; 
+        height: 200px; 
+    }
+    
+    @keyframes scanMove { 
+        0% { top: 0; } 
+        50% { top: 180px; } 
+        100% { top: 0; } 
+    }
+    
+    .result-floating {
+        bottom: 100px;
+        padding: 18px;
+    }
+    
+    .btn-primary,
+    .btn-outline {
+        height: 44px;
+        font-size: 13px;
+    }
+    
+    .history-item {
+        padding: 16px;
+    }
+    
+    .bottom-nav {
+        height: 60px;
+        width: 94%;
+    }
+    
+    .nav-item {
+        font-size: 10px;
+    }
+    
+    .nav-icon {
+        width: 22px;
+        height: 22px;
+    }
+  }
