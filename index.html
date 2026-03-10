@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Eris Scan – QR & Barcode Scanner</title><link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0A66C2"><link rel="stylesheet" href="style.css"><!-- QR SCANNER LIBRARY --><script src="https://unpkg.com/html5-qrcode"></script></head><body><div class="app"><!-- ================= HEADER ================= --><header class="header"><div class="header-inner"><div class="brand">
+<h1>Eris Scan</h1>
+<p>Fast QR & Barcode Scanner</p>
+</div><div class="header-actions">
+<button class="icon-btn"></button>
+<button class="icon-btn"></button>
+</div></div></header><!-- ================= SCANNER ================= --><section class="scanner-section"><div class="scanner-wrapper"><div id="reader"></div><div class="scan-overlay"><div class="scan-frame"><div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div><div class="scan-line"></div></div></div></div></section><!-- ================= SCAN RESULT ================= --><section class="result-section"><div class="result-card"><div class="result-header">
+<h2>Scan Result</h2>
+</div><div class="result-body"><div id="result">
+Waiting for scan...
+</div></div><div class="result-actions"><button id="openLink" class="btn-primary">
+Open Link
+</button><button id="copyText" class="btn-outline">
+Copy Text
+</button></div></div></section><!-- ================= HISTORY ================= --><section class="history-section"><div class="history-container"><h2>Scan History</h2><div class="history-list" id="history"><div class="history-item"><div class="history-icon"></div><div class="history-content"><p class="history-title">
+No scans yet
+</p><p class="history-time">
+History will appear here
+</p></div></div></div></div></section><!-- ================= BOTTOM NAV ================= --><nav class="bottom-nav"><div class="nav-item active" id="scanBtn">
+<div class="nav-icon"></div>
+<p>Scan</p>
+</div><div class="nav-item" id="historyBtn">
+<div class="nav-icon"></div>
+<p>History</p>
+</div><div class="nav-item" id="settingsBtn">
+<div class="nav-icon"></div>
+<p>Settings</p>
+</div></nav></div><!-- ================= MAIN SCRIPT ================= --><script src="scan.js"></script><!-- ================= SERVICE WORKER ================= --><script>
+
+if ('serviceWorker' in navigator) {
+
+window.addEventListener('load', function() {
+
+navigator.serviceWorker.register('service-worker.js');
+
+});
+
+}
+
+</script></body>
+</html>
