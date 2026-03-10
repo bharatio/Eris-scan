@@ -462,3 +462,20 @@ z-index:999;
 padding-bottom:10px;
 
 }
+/* ===== FIX TOUCH BLOCK ===== */
+
+.scan-overlay{
+pointer-events:none;
+}
+
+.scan-frame{
+pointer-events:none;
+}
+
+.corner{
+pointer-events:none;
+}
+
+.scan-line{
+pointer-events:none;
+}
