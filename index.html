@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eris Scan</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0A66C2">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <!-- Tesseract.js for OCR functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="brand">
+                <h1>Eris Scan</h1>
+                <p>AI QR Scanner</p>
+            </div>
+        </header>
+
+        <!-- CAMERA -->
+        <section class="camera-section">
+            <div id="reader"></div>
+            <div class="scan-ui">
+                <div class="scan-box">
+                    <div class="corner tl"></div>
+                    <div class="corner tr"></div>
+                    <div class="corner bl"></div>
+                    <div class="corner br"></div>
+                    <div class="scan-line"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESULT FLOAT CARD -->
+        <div class="result-floating">
+            <div class="result-text" id="result">
+                Waiting for scan...
+            </div>
+            <div class="result-buttons">
+                <button id="openLink" class="btn-primary">Open Link</button>
+                <button id="copyText" class="btn-outline">Copy</button>
+                <button id="shareBtn" class="btn-outline">Share</button>
+            </div>
+            <button id="installApp" class="install-btn" style="display:none;">Install App</button>
+        </div>
+
+        <!-- HISTORY -->
+        <section class="history-section">
+            <div class="history-header">
+                <h2>Scan History</h2>
+                <button id="clearHistory" class="clear-btn">Clear</button>
+            </div>
+            <div id="history"></div>
+        </section>
+
+        <!-- HIDDEN IMAGE SCAN INPUT -->
+        <input type="file" id="imageScan" accept="image/*" style="display:none">
+
+        <!-- NAVBAR -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" id="scanBtn">
+                <div class="nav-icon"></div>
+                <p>Scan</p>
+            </div>
+            <div class="nav-item" id="flashBtn">
+                <div class="nav-icon"></div>
+                <p>Flash</p>
+            </div>
+            <div class="nav-item" id="imageBtn">
+                <div class="nav-icon"></div>
+                <p>Image</p>
+            </div>
+            <div class="nav-item" id="historyBtn">
+                <div class="nav-icon"></div>
+                <p>History</p>
+            </div>
+            <div class="nav-item" id="settingsBtn">
+                <div class="nav-icon"></div>
+                <p>Settings</p>
+            </div>
+        </nav>
+    </div>
+
+    <script src="scan.js"></script>
+</body>
+              </html>
