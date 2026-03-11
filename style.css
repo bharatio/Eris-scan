@@ -1,0 +1,864 @@
+/* =====================================================
+ERIS SCAN – ULTIMATE PREMIUM UI (FINAL + CREAM CARDS)
+MODERN SCAN BOX + QR DETECT HIGHLIGHT + FOCUS ANIMATION
+CARD BOUNCE EFFECT + WHITE NAVBAR + DARK GREY ICONS
+CREAM HISTORY CARDS + CREAM RESULT CARD
+COMPLETE PREMIUM EXPERIENCE
+===================================================== */
+
+/* ================= ROOT (VARIABLES) ================= */
+:root {
+    /* Brand Colors */
+    --blue: #0A66C2; 
+    --blueLight: #1f7ae0;
+    --google-blue: #0A66C2;
+    --google-blue-dark: #084a8f;
+    --active-color: #0A66C2;
+    --inactive-icon: #6e6e73;
+    
+    /* Base Colors */
+    --dark: #000; 
+    --white: #ffffff;
+    --cream: #f7f4ef;
+    --cream-light: #faf8f4;
+    --gray-200: #e5e7eb;
+    --gray-400: #9ca3af;
+    
+    /* Spacing */
+    --space-2: 8px;
+    --radius: 20px;
+    --radius-full: 9999px;
+    
+    /* Navbar Specific Variables */
+    --navbar-bottom-offset: 16px;
+    --navbar-max-width: 480px;
+    --navbar-height: 68px;
+    --navbar-border-radius: 42px;
+    
+    /* Typography */
+    --text-xs: 11px;
+    --font-medium: 500;
+    
+    /* Z-index */
+    --z-fixed: 50;
+    
+    /* Transitions */
+    --transition-base: 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+    --transition-fast: 0.15s ease;
+}
+
+/* ================= RESET ================= */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body {
+    background: #000; 
+    color: #fff;
+    min-height: 100vh;
+    overflow-y: auto;
+    font-family: "Inter", "SF Pro Text", system-ui, -apple-system, sans-serif;
+}
+
+/* ================= APP ================= */
+.app {
+    width: 100%; 
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ================= HEADER ================= */
+.header {
+    position: absolute;
+    top: 24px; 
+    left: 22px;
+    z-index: 20;
+}
+
+.brand h1 {
+    font-size: 22px; 
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    font-family: "Inter", system-ui;
+}
+
+.brand p {
+    font-size: 13px; 
+    opacity: .6; 
+    margin-top: 4px;
+    font-family: "Inter", system-ui;
+}
+
+/* ================= CAMERA ================= */
+.camera-section {
+    position: absolute;
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%;
+}
+
+#reader {
+    width: 100%; 
+    height: 100%;
+}
+
+#reader video {
+    width: 100%; 
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+/* ================= CINEMATIC CAMERA OVERLAY ================= */
+.camera-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,.55),
+        transparent 30%,
+        transparent 70%,
+        rgba(0,0,0,.55)
+    );
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* ================= SCAN UI ================= */
+.scan-ui {
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* ================= MODERN SCAN BOX (NEON + GLASS) ================= */
+.scan-box {
+    width: 280px;
+    height: 280px;
+    border-radius: 18px;
+    position: relative;
+    box-shadow: 0 0 30px rgba(10,102,194,.25), inset 0 0 20px rgba(10,102,194,.15);
+    animation: scanPulse 3s infinite ease-in-out;
+    transition: transform 0.3s ease;
+}
+
+/* Auto zoom on detection */
+.scan-box.detected {
+    transform: scale(1.05);
+}
+
+@keyframes scanPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+/* ================= CAMERA FOCUS ANIMATION ================= */
+.scan-box::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 20px;
+    pointer-events: none;
+}
+
+/* ================= QR DETECT HIGHLIGHT ================= */
+.qr-detected {
+    box-shadow: 0 0 40px rgba(0,255,180,.8), inset 0 0 30px rgba(0,255,180,.4) !important;
+}
+
+/* ================= FOCUS ANIMATION ================= */
+.scan-box::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    border: 2px dashed rgba(255,255,255,.2);
+    animation: focusMove 6s linear infinite;
+}
+
+@keyframes focusMove {
+    0% { opacity: .2; }
+    50% { opacity: .8; }
+    100% { opacity: .2; }
+}
+
+/* ================= APPLE STYLE CORNERS ================= */
+.corner {
+    position: absolute;
+    width: 42px; 
+    height: 42px;
+    border: 4px solid white;
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(255,255,255,.6), 0 0 18px rgba(10,102,194,.4);
+    z-index: 2;
+}
+
+.tl {
+    top: 0; 
+    left: 0;
+    border-right: none; 
+    border-bottom: none;
+}
+
+.tr {
+    top: 0; 
+    right: 0;
+    border-left: none; 
+    border-bottom: none;
+}
+
+.bl {
+    bottom: 0; 
+    left: 0;
+    border-right: none; 
+    border-top: none;
+}
+
+.br {
+    bottom: 0; 
+    right: 0;
+    border-left: none; 
+    border-top: none;
+}
+
+/* ================= PREMIUM SCAN LINE (CENTER FIXED) ================= */
+.scan-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #00c6ff, #0A66C2, transparent);
+    border-radius: 4px;
+    transform: translateY(-50%);
+    animation: scanMove 2.5s linear infinite;
+    z-index: 1;
+}
+
+@keyframes scanMove {
+    0% {
+        transform: translateY(-120px);
+        opacity: .5;
+    }
+    50% {
+        transform: translateY(120px);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-120px);
+        opacity: .5;
+    }
+}
+
+/* ================= SCAN SUCCESS ANIMATION ================= */
+@keyframes scanSuccess {
+    0% { box-shadow: 0 0 0 rgba(10,102,194,0); }
+    50% { box-shadow: 0 0 30px rgba(10,102,194,.8); }
+    100% { box-shadow: 0 0 0 rgba(10,102,194,0); }
+}
+
+.scan-success {
+    animation: scanSuccess .6s ease;
+}
+
+/* ================= CREAM GLASS RESULT CARD (WITH BOUNCE) ================= */
+.result-floating {
+    display: none;
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 110px;
+    background: rgba(247, 244, 239, 0.96);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    color: #111;
+    border-radius: 24px;
+    padding: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.4), 0 4px 12px rgba(0,0,0,.25);
+    z-index: 30;
+    animation: cardBounce .5s ease;
+}
+
+@keyframes cardBounce {
+    0% { transform: translateY(40px); }
+    60% { transform: translateY(-8px); }
+    100% { transform: translateY(0); }
+}
+
+/* ================= RESULT TEXT (SCROLLABLE) ================= */
+.result-text {
+    font-size: 15px;
+    font-weight: 500;
+    max-height: 180px;
+    overflow-y: auto;
+    word-break: break-word;
+    line-height: 1.5;
+    margin-bottom: 14px;
+    padding-right: 4px;
+    color: #222;
+    font-family: "Inter", system-ui;
+}
+
+/* ================= PREMIUM SCROLLBAR FOR RESULT ================= */
+.result-text::-webkit-scrollbar {
+    width: 4px;
+}
+.result-text::-webkit-scrollbar-thumb {
+    background: #0A66C2;
+    border-radius: 4px;
+}
+
+/* ================= RESULT BUTTONS ================= */
+.result-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+/* ================= MODERN PRIMARY BUTTON ================= */
+.btn-primary {
+    flex: 1;
+    height: 46px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #0A66C2, #1e7be0);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 22px rgba(10,102,194,.4);
+    transition: .2s;
+    font-family: "Inter", system-ui;
+}
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px rgba(10,102,194,.5);
+}
+.btn-primary:active {
+    transform: scale(.96);
+}
+
+/* ================= MODERN OUTLINE BUTTON ================= */
+.btn-outline {
+    flex: 1;
+    height: 46px;
+    border-radius: 14px;
+    border: 2px solid #0A66C2;
+    background: #f7f4ef;
+    color: #0A66C2;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .25s;
+    font-family: "Inter", system-ui;
+}
+.btn-outline:hover {
+    background: #0A66C2;
+    color: #fff;
+}
+.btn-outline:active {
+    transform: scale(.96);
+}
+
+/* ================= PREMIUM HISTORY SECTION ================= */
+.history-section {
+    display: none;
+    position: absolute;
+    top: 90px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px;
+    background: #000;
+    scroll-behavior: smooth;
+}
+
+/* title */
+.history-section h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    letter-spacing: 0.3px;
+    color: #fff;
+    font-family: "Inter", system-ui;
+}
+
+/* header row */
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+/* clear button */
+.clear-btn {
+    background: linear-gradient(135deg, #0A66C2, #1e88ff);
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 6px 14px rgba(10, 102, 194, 0.35);
+    cursor: pointer;
+    font-family: "Inter", system-ui;
+}
+
+/* ================= CREAM HISTORY CARDS (PREMIUM) ================= */
+.history-item {
+    background: #f7f4ef;
+    color: #111;
+    padding: 18px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.08);
+    transition: all 0.25s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    font-family: "Inter", system-ui;
+}
+.history-item:active { transform: scale(0.96); }
+
+.history-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 45px rgba(0,0,0,.25), 0 2px 12px rgba(0,0,0,.15);
+}
+
+/* Default icon (fallback) */
+.history-item::before {
+    content: "🔗";
+    position: absolute;
+    left: 16px;
+    top: 18px;
+    font-size: 18px;
+    opacity: 0.8;
+}
+
+/* Type-specific icons */
+.history-item.phone::before { content: "📞"; }
+.history-item.link::before { content: "🌐"; }
+.history-item.text::before { content: "📄"; }
+
+/* text with 3-line clamp */
+.history-item p {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+    padding-left: 28px;
+    word-break: break-word;
+    font-family: "Inter", system-ui;
+    color: #1a1a1a;
+    
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* time */
+.history-item small {
+    font-size: 12px;
+    opacity: .55;
+    margin-top: 6px;
+    display: block;
+    padding-left: 28px;
+    font-family: "Inter", system-ui;
+    color: #444;
+}
+
+/* ================= CUSTOM SCROLLBAR ================= */
+.history-section::-webkit-scrollbar { width: 6px; }
+.history-section::-webkit-scrollbar-thumb { background: #0A66C2; border-radius: 10px; }
+.history-section::-webkit-scrollbar-track { background: transparent; }
+
+/* =========================================
+   PURE WHITE NAVBAR (APPLE STYLE) WITH BLUR
+   ========================================= */
+
+.bottom-nav {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 480px;
+    height: 68px;
+    background: #ffffff;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 42px;
+    box-shadow: 0 20px 40px rgba(0,0,0,.25), 0 6px 14px rgba(0,0,0,.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    z-index: 50;
+    transition: transform 0.25s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.25s ease;
+}
+
+.bottom-nav:hover {
+    box-shadow: 0 25px 45px rgba(0,0,0,.3), 0 8px 18px rgba(0,0,0,.15);
+}
+
+.bottom-nav:active {
+    transform: translateX(-50%) scale(0.98);
+}
+
+.nav-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    height: 100%;
+    border-radius: 9999px;
+    color: #6e6e73;  /* Dark grey for inactive */
+    transition: color 0.25s cubic-bezier(0.23, 1, 0.32, 1), transform 0.25s ease;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.nav-item.active {
+    color: #0A66C2;  /* Blue for active */
+}
+
+.nav-item:hover {
+    color: #0A66C2;
+}
+
+.nav-item:active {
+    transform: scale(0.92);
+}
+
+/* Icon tap pop animation */
+.nav-item:active .nav-icon {
+    transform: scale(1.25);
+    transition: .2s;
+}
+
+.nav-item:focus-visible {
+    outline: 2px solid #0A66C2;
+    outline-offset: 2px;
+}
+
+/* Ripple effect for nav-item */
+.nav-item::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border-radius: 9999px;
+    background: currentColor;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    pointer-events: none;
+}
+
+.nav-item:active::after {
+    opacity: 0.1;
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+.nav-icon {
+    position: relative;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    filter: contrast(1.1);  /* Makes icons sharper */
+    transition: transform 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.nav-item.active .nav-icon {
+    transform: translateY(-2px);
+}
+
+.nav-item p {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+    margin: 0;
+    transition: opacity 0.25s ease;
+    font-family: "Inter", system-ui;
+}
+
+/* Hide labels on small screens */
+@media (max-width: 480px) {
+    .nav-item p {
+        display: none;
+    }
+    
+    .nav-icon {
+        margin-bottom: 0;
+        transform: scale(1.1);
+    }
+    
+    .nav-item.active .nav-icon {
+        transform: translateY(0) scale(1.2);
+    }
+}
+
+/* =========================================
+   PURE CSS ICONS for nav-item
+   Each nav-item gets its own icon
+   ========================================= */
+
+/* Scan icon - for scanBtn */
+#scanBtn .nav-icon {
+    position: relative;
+}
+#scanBtn .nav-icon::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border: 2px solid currentColor;
+    border-radius: 6px;
+}
+#scanBtn .nav-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+/* Flash icon - for flashBtn */
+#flashBtn .nav-icon {
+    position: relative;
+}
+#flashBtn .nav-icon::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 22px;
+    background: currentColor;
+    clip-path: polygon(
+        40% 0%,
+        100% 35%,
+        60% 35%,
+        75% 100%,
+        0% 60%,
+        45% 60%
+    );
+    border-radius: 2px;
+}
+
+/* Image icon - for imageBtn (FIXED - CENTERED) */
+#imageBtn .nav-icon {
+    position: relative;
+}
+#imageBtn .nav-icon::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border: 2px solid currentColor;
+    border-radius: 4px;
+}
+#imageBtn .nav-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    background: currentColor;
+    border-radius: 1px;
+    transform: translate(-50%, -50%);
+    box-shadow:
+        -8px -8px 0 currentColor,
+        0px 0px 0 currentColor,
+        8px 8px 0 currentColor;
+}
+
+/* History icon - for historyBtn (FIXED - PERFECT CLOCK) */
+#historyBtn .nav-icon {
+    position: relative;
+}
+#historyBtn .nav-icon::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+}
+#historyBtn .nav-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2px;
+    height: 8px;
+    background: currentColor;
+    border-radius: 2px;
+    transform-origin: 50% 100%;
+    transform: translate(-50%, -100%) rotate(0deg);
+    animation: clockTick 20s linear infinite;
+}
+
+/* Settings icon - for settingsBtn */
+#settingsBtn .nav-icon {
+    position: relative;
+}
+#settingsBtn .nav-icon::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+}
+/* Gear teeth using box-shadow technique */
+#settingsBtn .nav-icon::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 8px;
+    background: currentColor;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 
+        4px 0px 0 0 currentColor,
+        -4px 0px 0 0 currentColor,
+        0px 4px 0 0 currentColor,
+        0px -4px 0 0 currentColor,
+        2.8px 2.8px 0 0 currentColor,
+        -2.8px 2.8px 0 0 currentColor,
+        2.8px -2.8px 0 0 currentColor,
+        -2.8px -2.8px 0 0 currentColor;
+}
+
+/* =========================================
+   INTERACTION ANIMATIONS
+   ========================================= */
+
+/* Settings icon rotation on hover */
+#settingsBtn:hover .nav-icon {
+    animation: gearRotate 2s infinite linear;
+}
+
+/* Flash icon pulse on hover */
+#flashBtn:hover .nav-icon {
+    animation: flashPulse 1s infinite;
+}
+/* Scan icon pulse on active */
+#scanBtn.active .nav-icon::before {
+    animation: pulse 2s infinite;
+}
+/* Image icon subtle animation on hover */
+#imageBtn:hover .nav-icon::after {
+    animation: bounce 1s infinite;
+}
+
+/* History icon hover - slow rotation */
+#historyBtn:hover .nav-icon::after {
+    animation: clockTick 20s linear infinite;
+}
+
+/* =========================================
+   ADDITIONAL INTERACTION STATES
+   ========================================= */
+
+/* Active state animations */
+#scanBtn.active .nav-icon {
+    transform: translateY(-2px) scale(1.05);
+}
+#flashBtn.active .nav-icon {
+    color: #ffaa00;
+    filter: drop-shadow(0 0 4px #ffaa00);
+}
+#imageBtn.active .nav-icon {
+    color: #0A66C2;
+}
+#historyBtn.active .nav-icon {
+    color: #0A66C2;
+}
+#historyBtn.active .nav-icon::after {
+    animation: clockTick 20s linear infinite;
+}
+#settingsBtn.active .nav-icon {
+    color: #0A66C2;
+    animation: gearRotate 4s infinite linear;
+}
+
+/* Focus visible states */
+#scanBtn:focus-visible .nav-icon::before { outline: 2px solid #0A66C2; outline-offset: 4px; }
+#flashBtn:focus-visible .nav-icon::before { filter: drop-shadow(0 0 4px #0A66C2); }
+#imageBtn:focus-visible .nav-icon::before { outline: 2px solid #0A66C2; outline-offset: 4px; }
+#historyBtn:focus-visible .nav-icon::before { outline: 2px solid #0A66C2; outline-offset: 4px; }
+#settingsBtn:focus-visible .nav-icon::before { outline: 2px solid #0A66C2; outline-offset: 4px; }
+
+/* Pressed state (active click) */
+#scanBtn:active .nav-icon::before { border-color: #084a8f; }
+#flashBtn:active .nav-icon::before { filter: brightness(1.5); }
+#imageBtn:active .nav-icon::before { border-color: #084a8f; }
+#historyBtn:active .nav-icon::before { border-color: #084a8f; }
+#settingsBtn:active .nav-icon::before { border-color: #084a8f; }
+
+/* =========================================
+   ANIMATION KEYFRAMES
+   ========================================= */
+@keyframes iconPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+}
+@keyframes gearRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+@keyframes clockTick {
+    0% {
+        transform: translate(-50%, -100%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%, -100%) rotate(360deg);
+    }
+}
+@keyframes flashPulse {
+    0%, 100% { filter: drop-shadow(0 0 2px currentColor); }
+    50% { filter: drop-shadow(0 0 8px currentColor); }
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+/* =========================================
+   REDUCED MOTION
+   ========================================= */
+@media (prefers-reduced-motion: reduce) {
+    #settingsBtn:ho
