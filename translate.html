@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Eris Translate</title>
+
+<style>
+
+body{
+background:#0e0e0e;
+color:white;
+font-family:sans-serif;
+padding:20px;
+}
+
+textarea{
+width:100%;
+height:120px;
+background:#1a1a1a;
+color:white;
+border:none;
+padding:12px;
+border-radius:10px;
+}
+
+button{
+margin-top:15px;
+padding:12px;
+width:100%;
+background:#ff6a00;
+border:none;
+border-radius:10px;
+color:white;
+font-size:16px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Eris Translate</h2>
+
+<textarea id="input"></textarea>
+
+<button onclick="runTranslate()">Translate</button>
+
+<h3>Result</h3>
+
+<textarea id="output"></textarea>
+
+<script>
+
+function getParam(name){
+let url=new URL(window.location.href);
+return url.searchParams.get(name);
+}
+
+let text=getParam("text");
+let target=getParam("lang") || "en";
+
+document.getElementById("input").value=text || "";
+
+async function translateChunk(chunk){
+
+/* MyMemory */
+
+try{
+
+let r=await fetch(
+"https://api.mymemory.translated.net/get?q="+
+encodeURIComponent(chunk)+
+"&langpair=en|"+target
+);
+
+let d=await r.json();
+
+if(d.responseData){
+return d.responseData.translatedText;
+}
+
+}catch(e){}
+
+/* Libre */
+
+try{
+
+let r=await fetch(
+"https://libretranslate.de/translate",
+{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+q:chunk,
+source:"auto",
+target:target
+})
+}
+);
+
+let d=await r.json();
+
+if(d.translatedText){
+return d.translatedText;
+}
+
+}catch(e){}
+
+/* Lingva */
+
+try{
+
+let r=await fetch(
+"https://lingva.ml/api/v1/auto/"+target+"/"+
+encodeURIComponent(chunk)
+);
+
+let d=await r.json();
+
+if(d.translation){
+return d.translation;
+}
+
+}catch(e){}
+
+return chunk;
+
+}
+
+async function runTranslate(){
+
+let text=document.getElementById("input").value;
+
+let result="";
+
+for(let i=0;i<text.length;i+=500){
+
+let chunk=text.substring(i,i+500);
+
+let translated=await translateChunk(chunk);
+
+result+=translated+" ";
+
+}
+
+document.getElementById("output").value=result;
+
+}
+
+</script>
+
+</body>
+</html>
