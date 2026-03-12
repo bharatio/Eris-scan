@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eris Scan</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0A66C2">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <style>
+        /* Translate Bar */
+        .translate-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(255,255,255,0.97);
+            border-radius: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+            margin: 8px auto;
+            width: fit-content;
+        }
+        .lang-box {
+            font-size: 13px;
+            font-weight: 600;
+            color: #222;
+            white-space: nowrap;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: #f0f0f0;
+        }
+        .lang-arrow { font-size: 14px; color: #888; }
+
+        #toLangBtn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: #fff;
+            border: 2px solid #C25E3A;
+            font-size: 13px;
+            font-weight: 700;
+            color: #C25E3A;
+            white-space: nowrap;
+            cursor: pointer;
+            outline: none;
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        #toLangBtn:active { background: #fdf0eb; }
+
+        /* Overlay */
+        #langOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 8000;
+        }
+        #langOverlay.show { display: block; }
+
+        /* Bottom Sheet */
+        #langSheet {
+            position: fixed;
+            left: 0; right: 0;
+            bottom: -120%;
+            background: #fff;
+            border-radius: 22px 22px 0 0;
+            z-index: 8001;
+            max-height: 80vh;
+            overflow-y: auto;
+            transition: bottom 0.3s ease;
+        }
+        #langSheet.show { bottom: 0; }
+
+        .sheet-title {
+            padding: 16px 18px 10px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #111;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 2;
+        }
+        .sheet-sub {
+            font-size: 11px;
+            color: #C25E3A;
+            margin-top: 3px;
+            font-weight: 500;
+        }
+
+        /* Download tip banner */
+        .dl-tip {
+            background: #fff8f0;
+            border: 1px solid #ffd9b8;
+            border-radius: 10px;
+            margin: 8px 14px;
+            padding: 10px 12px;
+            font-size: 12px;
+            color: #7a4000;
+        }
+        .dl-tip b { display: block; margin-bottom: 4px; font-size: 13px; }
+        #dlAllBtn {
+            display: block;
+            width: 100%;
+            margin-top: 8px;
+            padding: 9px;
+            background: #C25E3A;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        /* Language Row */
+        .lang-row {
+            display: flex;
+            align-items: center;
+            padding: 13px 16px;
+            border-bottom: 1px solid #f5f5f5;
+            gap: 12px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+        }
+        .lang-row:active { background: #fdf0eb; }
+        .lang-row .lf { font-size: 24px; min-width: 32px; text-align: center; pointer-events: none; }
+        .lang-row .linfo { flex: 1; pointer-events: none; }
+        .lang-row .ln { font-size: 14px; font-weight: 500; color: #222; }
+        .lang-row .ls { font-size: 11px; color: #999; margin-top: 2px; }
+        .lang-row.cur-sel .ln { color: #C25E3A; font-weight: 700; }
+
+        /* Download button states */
+        .dl-btn {
+            padding: 6px 12px;
+            border-radius: 18px;
+            font-size: 12px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            touch-action: manipulation;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+            min-width: 88px;
+            text-align: center;
+        }
+        .dl-need    { background: #fff3f0; color: #C25E3A; border: 1.5px solid #C25E3A; }
+        .dl-loading { background: #f5f5f5; color: #888; border: 1.5px solid #ddd; }
+        .dl-ready   { background: #e8f5e9; color: #2e7d32; border: 1.5px solid #4caf50; }
+        .dl-active  { background: #C25E3A; color: #fff; border: 1.5px solid #C25E3A; }
+    </style>
+</head>
+<body>
+<div class="app">
+
+    <header class="header">
+        <div class="brand">
+            <h1>Eris Scan</h1>
+            <p>AI QR Scanner</p>
+        </div>
+    </header>
+
+    <section class="camera-section">
+        <div id="reader"></div>
+
+        <div class="translate-bar" id="translateBar" style="display:none;">
+            <div class="lang-box" id="fromLang">Detecting...</div>
+            <div class="lang-arrow">→</div>
+            <button id="toLangBtn" type="button">
+                <span id="btnFlag">🇬🇧</span>&nbsp;<span id="btnName">English</span>&nbsp;▾
+            </button>
+        </div>
+
+        <div class="scan-ui">
+            <div class="scan-box">
+                <div class="corner tl"></div><div class="corner tr"></div>
+                <div class="corner bl"></div><div class="corner br"></div>
+                <div class="scan-line"></div>
+            </div>
+            <p class="scan-text">Align QR code within frame</p>
+        </div>
+    </section>
+
+    <div class="result-floating">
+        <div class="result-text" id="result">Waiting for scan...</div>
+        <div class="result-buttons">
+            <button id="openLink" class="btn-primary">Open Link</button>
+            <button id="copyText" class="btn-outline">Copy</button>
+            <button id="shareBtn" class="btn-outline">Share</button>
+        </div>
+        <button id="installApp" class="install-btn" style="display:none;">Install App</button>
+    </div>
+
+    <section class="history-section">
+        <div class="history-header">
+            <h2>Scan History</h2>
+            <button id="clearHistory" class="clear-btn">Clear</button>
+        </div>
+        <div id="history"></div>
+    </section>
+
+    <input type="file" id="imageScan" accept="image/*" style="display:none">
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" id="scanBtn"><div class="nav-icon"></div><p>Scan</p></div>
+        <div class="nav-item" id="flashBtn"><div class="nav-icon"></div><p>Flash</p></div>
+        <div class="nav-item" id="imageBtn"><div class="nav-icon"></div><p>Image</p></div>
+        <div class="nav-item" id="historyBtn"><div class="nav-icon"></div><p>History</p></div>
+        <div class="nav-item" id="settingsBtn"><div class="nav-icon"></div><p>Settings</p></div>
+    </nav>
+
+    <!-- Translate FAB -->
+    <div id="translateBtn" class="translate-btn">
+        <svg viewBox="0 0 100 100" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+            <line x1="27" y1="28" x2="57" y2="28" stroke="#C25E3A" stroke-width="7" stroke-linecap="round"/>
+            <line x1="42" y1="28" x2="42" y2="38" stroke="#C25E3A" stroke-width="7" stroke-linecap="round"/>
+            <line x1="20" y1="42" x2="64" y2="42" stroke="#C25E3A" stroke-width="7" stroke-linecap="round"/>
+            <line x1="22" y1="43" x2="10" y2="65" stroke="#C25E3A" stroke-width="7" stroke-linecap="round"/>
+            <line x1="62" y1="43" x2="74" y2="65" stroke="#C25E3A" stroke-width="7" stroke-linecap="round"/>
+            <line x1="42" y1="43" x2="42" y2="66" stroke="#C25E3A" stroke-width="7" stroke-linecap="round"/>
+            <line x1="48" y1="78" x2="63" y2="38" stroke="#F5F2ED" stroke-width="8.5" stroke-linecap="round"/>
+            <line x1="78" y1="78" x2="63" y2="38" stroke="#F5F2ED" stroke-width="8.5" stroke-linecap="round"/>
+            <line x1="53" y1="63" x2="73" y2="63" stroke="#F5F2ED" stroke-width="7" stroke-linecap="round"/>
+        </svg>
+    </div>
+
+    <!-- Language Sheet -->
+    <div id="langOverlay"></div>
+    <div id="langSheet">
+        <div class="sheet-title">
+            🌐 Select Language
+            <div class="sheet-sub">⬇ Download karo pehle — phir 100% kaam karega</div>
+        </div>
+
+        <div class="dl-tip">
+            <b>⚡ Ek baar download karo, hamesha kaam karega</b>
+            Download button dabao — app verify karega ki ye language kaam kar rahi hai.
+            <button id="dlAllBtn">⬇ Saari Languages Download Karo (Recommended)</button>
+        </div>
+
+        <div class="lang-row cur-sel" data-code="en" data-flag="🇬🇧" data-name="English">
+            <span class="lf">🇬🇧</span>
+            <div class="linfo"><div class="ln">English</div><div class="ls" id="ls-en">✓ Ready</div></div>
+            <button class="dl-btn dl-active" id="dl-en">✓ Active</button>
+        </div>
+        <div class="lang-row" data-code="hi" data-flag="🇮🇳" data-name="Hindi">
+            <span class="lf">🇮🇳</span>
+            <div class="linfo"><div class="ln">Hindi</div><div class="ls" id="ls-hi">Download karo</div></div>
+            <button class="dl-btn dl-need" id="dl-hi">⬇ Download</button>
+        </div>
+        <div class="lang-row" data-code="es" data-flag="🇪🇸" data-name="Spanish">
+            <span class="lf">🇪🇸</span>
+            <div class="linfo"><div class="ln">Spanish</div><div class="ls" id="ls-es">Download karo</div></div>
+            <button class="dl-btn dl-need" id="dl-es">⬇ Download</button>
+        </div>
+        <div class="lang-row" data-code="fr" data-flag="🇫🇷" data-name="French">
+            <span class="lf">🇫🇷</span>
+            <div class="linfo"><div class="ln">French</div><div class="ls" id="ls-fr">Download karo</div></div>
+            <button class="dl-btn dl-need" id="dl-fr">⬇ Download</button>
+        </div>
+        <div class="lang-row" data-code="de" data-flag="🇩🇪" data-name="German">
+            <span class="lf">🇩🇪</span>
+            <div class="linfo"><div class="ln">German</div><div class="ls" id="ls-de">Download karo</div></div>
+            <button class="dl-btn dl-need" id="dl-de">⬇ Download</button>
+        </div>
+        <div class="lang-row" data-code="ru" data-flag="🇷🇺" data-name="Russian">
+            <span class="lf">🇷🇺</span>
+            <div class="linfo"><div class="ln">Russian</div><div class="ls" id="ls-ru">Download karo</div></div>
+            <button class="dl-btn dl-need" id="dl-ru">⬇ Download</button>
+        </div>
+        <div class="lang-row" data-code="ar" data-flag="🇸🇦" data-name="Arabic">
+            <span class="lf">🇸🇦</span>
+            <div class="linfo"><div class="ln">Arabic</div><div class="ls" id="ls-ar">Download karo</div></div>
+            <button class="dl-btn dl-need" id="dl-ar">⬇ Download</button>
+        </div>
+        <div class="lang-row" data-code="zh" data-flag="🇨🇳" data-name="Chinese">
+            <span class="lf">🇨🇳</span>
+            <div class="linfo"><div class="ln">Chinese</div><div class="ls" id="ls-zh">Download karo</div></div>
+            <button class="dl-btn dl-need" id="dl-zh">⬇ Download</button>
+        </div>
+        <div class="lang-row" data-code="ja" data-flag="🇯🇵" data-name="Japanese">
+            <span class="lf">🇯🇵</span>
+            <div class="linfo"><div class="ln">Japanese</div><div class="ls" id="ls-ja">Download karo</div></div>
+            <button class="dl-btn dl-need" id="dl-ja">⬇ Download</button>
+        </div>
+        <div class="lang-row" data-code="ko" data-flag="🇰🇷" data-name="Korean">
+            <span class="lf">🇰🇷</span>
+            <div class="linfo"><div class="ln">Korean</div><div class="ls" id="ls-ko">Download karo</div></div>
+            <button class="dl-btn dl-need" id="dl-ko">⬇ Download</button>
+        </div>
+        <div class="lang-row" data-code="ur" data-flag="🇵🇰" data-name="Urdu">
+            <span class="lf">🇵🇰</span>
+            <div class="linfo"><div class="ln">Urdu</div><div class="ls" id="ls-ur">Download karo</div></div>
+            <button class="dl-btn dl-need" id="dl-ur">⬇ Download</button>
+        </div>
+        <div class="lang-row" data-code="bn" data-flag="🇧🇩" data-name="Bengali">
+            <span class="lf">🇧🇩</span>
+            <div class="linfo"><div class="ln">Bengali</div><div class="ls" id="ls-bn">Download karo</div></div>
+            <button class="dl-btn dl-need" id="dl-bn">⬇ Download</button>
+        </div>
+        <div class="lang-row" data-code="ta" data-flag="🇮🇳" data-name="Tamil">
+            <span class="lf">🇮🇳</span>
+            <div class="linfo"><div class="ln">Tamil</div><div class="ls" id="ls-ta">Download karo</div></div>
+            <button class="dl-btn dl-need" id="dl-ta">⬇ Download</button>
+        </div>
+        <div class="lang-row" data-code="te" data-flag="🇮🇳" data-name="Telugu">
+            <span class="lf">🇮🇳</span>
+            <div class="linfo"><div class="ln">Telugu</div><div class="ls" id="ls-te">Download karo</div></div>
+            <button class="dl-btn dl-need" id="dl-te">⬇ Download</button>
+        </div>
+        <div class="lang-row" data-code="mr" data-flag="🇮🇳" data-name="Marathi">
+            <span class="lf">🇮🇳</span>
+            <div class="linfo"><div class="ln">Marathi</div><div class="ls" id="ls-mr">Download karo</div></div>
+            <button class="dl-btn dl-need" id="dl-mr">⬇ Download</button>
+        </div>
+        <div class="lang-row" data-code="pt" data-flag="🇧🇷" data-name="Portuguese">
+            <span class="lf">🇧🇷</span>
+            <div class="linfo"><div class="ln">Portuguese</div><div class="ls" id="ls-pt">Download karo</div></div>
+            <button class="dl-btn dl-need" id="dl-pt">⬇ Download</button>
+        </div>
+        <div class="lang-row" data-code="it" data-flag="🇮🇹" data-name="Italian">
+            <span class="lf">🇮🇹</span>
+            <div class="linfo"><div class="ln">Italian</div><div class="ls" id="ls-it">Download karo</div></div>
+            <button class="dl-btn dl-need" id="dl-it">⬇ Download</button>
+        </div>
+    </div>
+
+</div>
+<script src="scan.js"></script>
+</body>
+</html>
+  
