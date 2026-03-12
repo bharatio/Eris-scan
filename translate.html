@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eris Translate</title>
+
+<style>
+
+body{
+background:#1D1C16;
+font-family:sans-serif;
+color:#F5F2ED;
+margin:0;
+padding:20px;
+}
+
+/* header */
+
+.header{
+font-size:28px;
+font-weight:600;
+margin-bottom:20px;
+}
+
+/* card */
+
+.card{
+background:#F5F2ED;
+color:#1D1C16;
+border-radius:20px;
+padding:18px;
+margin-bottom:20px;
+}
+
+/* language label */
+
+.lang{
+font-size:14px;
+opacity:.6;
+margin-bottom:10px;
+}
+
+/* text */
+
+.text{
+font-size:24px;
+font-weight:600;
+}
+
+/* input */
+
+textarea{
+width:100%;
+border:none;
+background:transparent;
+font-size:22px;
+outline:none;
+color:#1D1C16;
+resize:none;
+}
+
+/* translate button */
+
+button{
+width:100%;
+background:#D97757;
+color:white;
+border:none;
+padding:14px;
+border-radius:14px;
+font-size:18px;
+margin-top:10px;
+}
+
+/* swap */
+
+.swap{
+text-align:center;
+margin:10px 0;
+font-size:22px;
+color:#D97757;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">Translate</div>
+
+<div class="card">
+
+<div class="lang">Source text</div>
+
+<textarea id="input" rows="3" placeholder="Enter text"></textarea>
+
+</div>
+
+<div class="swap">⇅</div>
+
+<div class="card">
+
+<div class="lang">Translated text</div>
+
+<div class="text" id="output">
+Result will appear here
+</div>
+
+</div>
+
+<button onclick="runTranslate()">Translate</button>
+
+<script>
+
+/* get URL text */
+
+let params=new URLSearchParams(location.search);
+let text=params.get("text");
+
+if(text){
+document.getElementById("input").value=text;
+}
+
+/* fallback translate */
+
+async function translateChunk(chunk,target){
+
+try{
+
+let r=await fetch(
+"https://api.mymemory.translated.net/get?q="+
+encodeURIComponent(chunk)+
+"&langpair=auto|"+target
+);
+
+let d=await r.json();
+
+if(d.responseData){
+return d.responseData.translatedText;
+}
+
+}catch(e){}
+
+try{
+
+let r=await fetch(
+"https://libretranslate.de/translate",
+{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+q:chunk,
+source:"auto",
+target:target
+})
+}
+);
+
+let d=await r.json();
+
+if(d.translatedText){
+return d.translatedText;
+}
+
+}catch(e){}
+
+try{
+
+let r=await fetch(
+"https://lingva.ml/api/v1/auto/"+target+"/"+
+encodeURIComponent(chunk)
+);
+
+let d=await r.json();
+
+if(d.translation){
+return d.translation;
+}
+
+}catch(e){}
+
+return chunk;
+
+}
+
+async function runTranslate(){
+
+let text=document.getElementById("input").value;
+
+let result="";
+
+for(let i=0;i<text.length;i+=800){
+
+let chunk=text.substring(i,i+800);
+
+let translated=await translateChunk(chunk,"en");
+
+result+=translated+" ";
+
+}
+
+document.getElementById("output").innerText=result;
+
+}
+
+</script>
+
+</body>
+</html>
